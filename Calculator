@@ -1,0 +1,108 @@
+#include<stdio.h>
+#include<conio.h>
+#include<stdlib.h>
+#include<dos.h>
+union REGS i,o;
+int a,b,c;
+int initmouse();
+void mouse();
+void gmouse(int *,int *,int *);
+void Display(int,int,int);
+void menu();
+void smenu();
+
+void main(){
+     clrscr();_setcursortype(0);   textbackground(WHITE);
+     int button,x,y,sta;
+     sta=initmouse();
+     mouse();
+     if(sta==0) printf("Not Support");
+     else{ menu();
+	  while(1){
+	     gmouse(&button,&x,&y);   smenu();
+	     if(button==1){       button=-1;
+		if(x>=256&&x<=328&&y>=64&&y<=71){    _setcursortype(2);
+		      gotoxy(34,9);cprintf("");scanf("%d",&a);   _setcursortype(0);
+		}//input a
+		if(x>=256&&x<=328&&y>=80&&y<=87){    _setcursortype(2);
+		      gotoxy(34,11);cprintf("");scanf("%d",&b);   _setcursortype(0);
+		}//input b
+		if(x>=360&&x<=440&&y>=64&&y<=71){
+		     c=a+b;
+		     textcolor(7);textbackground(BLUE);
+		     gotoxy(34,13);cprintf("%d",c);  textbackground(6);
+		}//calculate
+		if(x>=360&&x<=440&&y>=80&&y<=87){
+			a=0; b=0;
+		    gotoxy(33,9); textbackground(BLUE); cprintf("%10c",0);textbackground(6);
+		    gotoxy(33,11); textbackground(BLUE); cprintf("%10c",0);textbackground(6);
+		    gotoxy(33,13); textbackground(BLUE); cprintf("%10c",0);textbackground(6);
+		}//new
+		if(x>=360&&x<=440&&y>=96&&y<=103){
+		    exit(0);
+		}//exit
+		//Display(button,x,y);
+	     }//end sub3
+	 }//end sub2
+     }//end sub1
+}//end main
+int initmouse(){
+    i.x.ax=0;
+    int86(0x33,&i,&o);
+    return(o.x.ax);
+}//end1
+void mouse(){
+   i.x.ax=1;
+   int86(0x33,&i,&o);
+}//end2
+void gmouse(int *button,int *x,int *y){
+   i.x.ax=3;
+   int86(0x33,&i,&o);
+   *button=o.x.bx;
+   *x=o.x.cx;
+   *y=o.x.dx;
+}//end3
+void Display(int button,int x,int y){
+     gmouse(&button,&x,&y);
+     gotoxy(1,25);cprintf("                       ");
+     gotoxy(1,25);cprintf("%d , %d",x,y);
+}//end4
+void menu(){    clrscr();
+     textbackground(5);textcolor(5);
+     gotoxy(20,7);cprintf("q%39c",0);   textcolor(RED);
+     gotoxy(21,7);cprintf("Calculator");
+     textbackground(6); textcolor(6);
+     for(int i=8;i<=16;i++){
+	gotoxy(20,i);cprintf("o%39c",0);
+     } textcolor(7);
+     gotoxy(23,9);cprintf("Value A");
+     gotoxy(33,9); textbackground(BLUE); cprintf("%10c",0);textbackground(6);
+     gotoxy(23,11);cprintf("Value B");
+     gotoxy(33,11); textbackground(BLUE); cprintf("%10c",0);textbackground(6);
+     gotoxy(23,13);cprintf("Result");
+     gotoxy(33,13); textbackground(BLUE); cprintf("%10c",0);textbackground(6);
+     gotoxy(46,9); textbackground(BLUE); cprintf(" Calculate ");textbackground(6);
+     gotoxy(46,11); textbackground(BLUE);cprintf(" New       ");textbackground(6);
+     gotoxy(46,13); textbackground(BLUE);cprintf(" Exit      ");textbackground(6);
+     textbackground(0);
+}//end5
+void smenu(){
+     int button,x,y;
+     gmouse(&button,&x,&y);
+     if(x>=360&&x<=440&&y>=64&&y<=71){
+	 gotoxy(46,9); textbackground(4); cprintf(" Calculate ");textbackground(6);
+     }
+     else if(x>=360&&x<=440&&y>=80&&y<=87){
+	gotoxy(46,11); textbackground(4);cprintf(" New       ");textbackground(6);
+     }
+     else if(x>=360&&x<=440&&y>=96&&y<=103){
+	gotoxy(46,13); textbackground(4);cprintf(" Exit      ");textbackground(6);
+     }
+     else{
+	gotoxy(46,9); textbackground(BLUE); cprintf(" Calculate ");textbackground(6);
+	gotoxy(46,11); textbackground(BLUE);cprintf(" New       ");textbackground(6);
+	gotoxy(46,13); textbackground(BLUE);cprintf(" Exit      ");textbackground(6);
+	textbackground(0);
+     }
+     textbackground(0);
+}//end6
