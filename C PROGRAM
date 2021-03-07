@@ -1,0 +1,17 @@
+#include<stdio.h>
+#include<conio.h>
+void swap(int*,int*);
+void main(){
+int a=10,b=30;
+clrscr();
+printf("BEFORE SWAP a:%d,b:%d\n",a,b);
+swap(&a,&b);
+getch();
+}
+void swap(int *x,int *y){
+int temp;
+temp=*x;
+*x=*y;
+*y=temp;
+printf("AFTER SWAP a:%d,b:%d",*x,*y);
+}
